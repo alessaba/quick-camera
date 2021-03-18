@@ -11,7 +11,7 @@ import AVKit
 import AVFoundation
 
 @NSApplicationMain
-class QCAppDelegate: NSObject, NSApplicationDelegate, QCUsbWatcherDelegate {
+class QCAppDelegate: NSObject, NSApplicationDelegate, QCUsbWatcherDelegate, NSWindowDelegate {
 
     let usb = QCUsbWatcher()
     func deviceCountChanged() {
@@ -241,7 +241,10 @@ class QCAppDelegate: NSObject, NSApplicationDelegate, QCUsbWatcherDelegate {
             self.window.contentResizeIncrements = NSMakeSize(1.0,1.0);
         }
     }
-     
+	
+	func windowDidResize(_ notification: Notification) {
+		fixAspectRatio()
+	}
 
     @IBAction func saveImage(_ sender: NSMenuItem) {
         if (self.window.styleMask.contains(.fullScreen)){
@@ -331,6 +334,7 @@ class QCAppDelegate: NSObject, NSApplicationDelegate, QCUsbWatcherDelegate {
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         detectVideoDevices();
         startCaptureWithVideoDevice(defaultDevice: defaultDeviceIndex);
+		window.delegate = self
         usb.delegate = self
     }
     
