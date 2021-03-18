@@ -246,7 +246,7 @@ class QCAppDelegate: NSObject, NSApplicationDelegate, QCUsbWatcherDelegate, NSWi
 		fixAspectRatio()
 	}
 
-    @IBAction func saveImage(_ sender: NSMenuItem) {
+    @IBAction func saveImage(_ sender: NSMenuItem?) {
         if (self.window.styleMask.contains(.fullScreen)){
             NSLog("Save is not supported as window is full screen");
             return;
@@ -341,6 +341,17 @@ class QCAppDelegate: NSObject, NSApplicationDelegate, QCUsbWatcherDelegate, NSWi
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
         true;
     }
+}
+
+class MyPlayerView : AVPlayerView {
+	override func keyDown(with event: NSEvent) {
+		if (event.keyCode == 49){
+			print("SPACE")
+			let l = NSApplication.shared.delegate as! QCAppDelegate
+			l.saveImage(nil)
+			self.window!.becomeFirstResponder()
+		}
+	}
 }
 
 // Helper function inserted by Swift 4.2 migrator.
