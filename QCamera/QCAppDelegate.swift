@@ -193,14 +193,14 @@ class QCAppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, QCUsbWat
     private func addBorder(){
         window.styleMask = defaultBorderStyle
         window.title = self.windowTitle
-        self.window.level = convertToNSWindowLevel(Int(CGWindowLevelForKey(.normalWindow)))
+        self.window.level = NSWindow.Level(rawValue: Int(CGWindowLevelForKey(.normalWindow)))
         window.isMovableByWindowBackground = false
     }
     
     private func removeBorder() {
         defaultBorderStyle = window.styleMask
         self.window.styleMask = [NSWindow.StyleMask.borderless, NSWindow.StyleMask.resizable]
-        self.window.level = convertToNSWindowLevel(Int(CGWindowLevelForKey(.maximumWindow)))
+        self.window.level = NSWindow.Level(rawValue: Int(CGWindowLevelForKey(.maximumWindow)))
         window.isMovableByWindowBackground = true
     }
     
@@ -212,7 +212,7 @@ class QCAppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, QCUsbWat
         }
 		isBorderless.toggle()
 		UserDefaults.standard.set(isBorderless, forKey: "isBorderless")
-        sender.state = convertToNSControlStateValue((isBorderless ? NSControl.StateValue.on.rawValue : NSControl.StateValue.off.rawValue))
+        sender.state = NSControl.StateValue(Int(isBorderless))
         if (isBorderless) {
             removeBorder()
         } else {
@@ -230,7 +230,7 @@ class QCAppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, QCUsbWat
     @IBAction func toggleFixAspectRatio(_ sender: NSMenuItem) {
 		isAspectRatioFixed.toggle()
 		UserDefaults.standard.set(isAspectRatioFixed, forKey: "isAspectRatioFixed")
-        sender.state = convertToNSControlStateValue((isAspectRatioFixed ? NSControl.StateValue.on.rawValue : NSControl.StateValue.off.rawValue))
+		sender.state = NSControl.StateValue(Int(isAspectRatioFixed))
         fixAspectRatio()
     }
     
@@ -352,9 +352,8 @@ class QCAppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, QCUsbWat
 		
 		self.captureLayer.connection?.isVideoMirrored = isMirrored
 		setRotation(position)
-		
-		aspectRatioItem.state = convertToNSControlStateValue((isAspectRatioFixed ? NSControl.StateValue.on.rawValue : NSControl.StateValue.off.rawValue))
-		borderlessItem.state = convertToNSControlStateValue((isBorderless ? NSControl.StateValue.on.rawValue : NSControl.StateValue.off.rawValue))
+		aspectRatioItem.state = NSControl.StateValue(rawValue: Int(isAspectRatioFixed))
+		borderlessItem.state = NSControl.StateValue(rawValue: Int(isBorderless))
     }
     
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
@@ -373,12 +372,8 @@ class MyPlayerView : AVPlayerView {
 	}
 }
 
-// Helper function inserted by Swift 4.2 migrator.
-fileprivate func convertToNSControlStateValue(_ input: Int) -> NSControl.StateValue {
-    NSControl.StateValue(rawValue: input)
-}
-
-// Helper function inserted by Swift 4.2 migrator.
-fileprivate func convertToNSWindowLevel(_ input: Int) -> NSWindow.Level {
-    NSWindow.Level(rawValue: input)
+fileprivate extension Int {
+	init(_ bool: Bool) {
+		self = bool ? 1 : 0
+	}
 }
