@@ -175,6 +175,8 @@
         </window>
         <customObject id="494" customClass="QCAppDelegate" customModule="Quick_Camera">
             <connections>
+                <outlet property="AspectRatioItem" destination="eHX-9R-cym" id="qdf-Jh-8b7"/>
+                <outlet property="borderlessItem" destination="651" id="bhN-lf-szE"/>
                 <outlet property="playerView" destination="372" id="tVX-fO-IZ2"/>
                 <outlet property="selectSourceMenu" destination="124" id="h5v-Cn-4oU"/>
                 <outlet property="window" destination="371" id="fTI-Cc-re1"/>

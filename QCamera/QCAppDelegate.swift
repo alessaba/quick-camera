@@ -11,7 +11,7 @@ import AVKit
 import AVFoundation
 
 @NSApplicationMain
-class QCAppDelegate: NSObject, NSApplicationDelegate, QCUsbWatcherDelegate, NSWindowDelegate {
+class QCAppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, QCUsbWatcherDelegate{
 
     let usb = QCUsbWatcher()
     func deviceCountChanged() {
@@ -22,15 +22,18 @@ class QCAppDelegate: NSObject, NSApplicationDelegate, QCUsbWatcherDelegate, NSWi
     @IBOutlet weak var window: NSWindow!
     @IBOutlet weak var selectSourceMenu: NSMenuItem!
     @IBOutlet weak var playerView: AVPlayerView!
-    
-    var isMirrored: Bool = false;
-    var isUpsideDown: Bool = false;
+	
+	@IBOutlet weak var aspectRatioItem: NSMenuItem!
+	@IBOutlet weak var borderlessItem: NSMenuItem!
+	
+    var isMirrored: Bool = UserDefaults.standard.bool(forKey: "isMirrored")
+    var isUpsideDown: Bool = UserDefaults.standard.bool(forKey: "isUpsideDown")
+	var isBorderless: Bool = UserDefaults.standard.bool(forKey: "isBorderless")
+	var isAspectRatioFixed: Bool = UserDefaults.standard.bool(forKey: "isAspectRatioFixed")
     
     // 0 = normal, 1 = 90' top to right, 2 = 180' top to bottom, 3 = 270' top to left
-    var position = 0;
-    
-    var isBorderless: Bool = false;
-    var isAspectRatioFixed: Bool = false;
+	var position = UserDefaults.standard.integer(forKey: "position");
+	
     var defaultBorderStyle: NSWindow.StyleMask = NSWindow.StyleMask.closable;
     var windowTitle = "Quick Camera";
     let defaultDeviceIndex: Int = 0;
@@ -127,7 +130,8 @@ class QCAppDelegate: NSObject, NSApplicationDelegate, QCUsbWatcherDelegate, NSWi
     
     @IBAction func mirrorHorizontally(_ sender: NSMenuItem) {
         NSLog("Mirror image menu item selected");
-        isMirrored = !isMirrored;
+		isMirrored.toggle()
+		UserDefaults.standard.set(isMirrored, forKey: "isMirrored")
         self.captureLayer.connection?.isVideoMirrored = isMirrored;
     }
     
@@ -163,9 +167,10 @@ class QCAppDelegate: NSObject, NSApplicationDelegate, QCUsbWatcherDelegate, NSWi
     
     @IBAction func mirrorVertically(_ sender: NSMenuItem) {
         NSLog("Mirror image vertically menu item selected");
-        isUpsideDown = !isUpsideDown;
+		isUpsideDown.toggle()
+		UserDefaults.standard.set(isUpsideDown, forKey: "isUpsideDown")
         setRotation(position);
-        isMirrored = !isMirrored;
+		isMirrored.toggle()
         self.captureLayer.connection?.isVideoMirrored = isMirrored;
     }
     
@@ -173,6 +178,7 @@ class QCAppDelegate: NSObject, NSApplicationDelegate, QCUsbWatcherDelegate, NSWi
         NSLog("Rotate Left menu item selected with position %d", position);
         position = position - 1;
         if (position == -1) { position = 3;}
+		UserDefaults.standard.set(position, forKey: "position")
         setRotation(position);
     }
     
@@ -180,6 +186,7 @@ class QCAppDelegate: NSObject, NSApplicationDelegate, QCUsbWatcherDelegate, NSWi
         NSLog("Rotate Right menu item selected with position %d", position);
         position = position + 1;
         if (position == 4) { position = 0;}
+		UserDefaults.standard.set(position, forKey: "position")
         setRotation(position);
     }
         
@@ -203,7 +210,8 @@ class QCAppDelegate: NSObject, NSApplicationDelegate, QCUsbWatcherDelegate, NSWi
             NSLog("Ignoring borderless command as window is full screen");
             return;
         }
-        isBorderless = !isBorderless;
+		isBorderless.toggle()
+		UserDefaults.standard.set(isBorderless, forKey: "isBorderless")
         sender.state = convertToNSControlStateValue((isBorderless ? NSControl.StateValue.on.rawValue : NSControl.StateValue.off.rawValue));
         if (isBorderless) {
             removeBorder()
@@ -220,7 +228,8 @@ class QCAppDelegate: NSObject, NSApplicationDelegate, QCUsbWatcherDelegate, NSWi
     }
     
     @IBAction func toggleFixAspectRatio(_ sender: NSMenuItem) {
-        isAspectRatioFixed = !isAspectRatioFixed;
+		isAspectRatioFixed.toggle()
+		UserDefaults.standard.set(isAspectRatioFixed, forKey: "isAspectRatioFixed")
         sender.state = convertToNSControlStateValue((isAspectRatioFixed ? NSControl.StateValue.on.rawValue : NSControl.StateValue.off.rawValue));
         fixAspectRatio();
     }
@@ -336,6 +345,16 @@ class QCAppDelegate: NSObject, NSApplicationDelegate, QCUsbWatcherDelegate, NSWi
         startCaptureWithVideoDevice(defaultDevice: defaultDeviceIndex);
 		window.delegate = self
         usb.delegate = self
+		
+		if (isBorderless) {
+			removeBorder()
+		}
+		
+		self.captureLayer.connection?.isVideoMirrored = isMirrored;
+		setRotation(position)
+		
+		aspectRatioItem.state = convertToNSControlStateValue((isAspectRatioFixed ? NSControl.StateValue.on.rawValue : NSControl.StateValue.off.rawValue));
+		borderlessItem.state = convertToNSControlStateValue((isBorderless ? NSControl.StateValue.on.rawValue : NSControl.StateValue.off.rawValue));
     }
     
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
