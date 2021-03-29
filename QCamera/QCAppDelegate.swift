@@ -309,8 +309,8 @@ class QCAppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, QCUsbWat
 							}
 						}
 					} else {
-						self.cachedSavePath!.appendPathComponent(String(format: "QuickCamera_%@_ %@.png", date, time))
-						let destination = CGImageDestinationCreateWithURL(self.cachedSavePath! as CFURL, kUTTypePNG, 1, nil)
+						let newPath = self.cachedSavePath!.appendingPathComponent(String(format: "QuickCamera_%@_ %@.png", date, time))
+						let destination = CGImageDestinationCreateWithURL(newPath as CFURL, kUTTypePNG, 1, nil)
 						CGImageDestinationAddImage(destination!, cgImage!, nil)
 						CGImageDestinationFinalize(destination!)
 					}
