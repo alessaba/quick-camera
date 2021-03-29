@@ -367,7 +367,7 @@ class MyPlayerView : AVPlayerView {
 			print("SPACE")
 			let l = NSApplication.shared.delegate as! QCAppDelegate
 			l.saveImage(nil)
-			self.window!.becomeFirstResponder()
+			self.window!.makeFirstResponder(self)
 		}
 	}
 }
