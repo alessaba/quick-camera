@@ -21,7 +21,7 @@ class QCAppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, QCUsbWat
 
     @IBOutlet weak var window: NSWindow!
     @IBOutlet weak var selectSourceMenu: NSMenuItem!
-    @IBOutlet weak var playerView: AVPlayerView!
+    @IBOutlet weak var playerView: NSView!
 	
 	@IBOutlet weak var aspectRatioItem: NSMenuItem!
 	@IBOutlet weak var borderlessItem: NSMenuItem!
@@ -115,7 +115,6 @@ class QCAppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, QCUsbWat
             self.captureLayer.connection?.isVideoMirrored = false
             
             self.playerView.layer = self.captureLayer
-            self.playerView.controlsStyle = AVPlayerViewControlsStyle.none
             self.playerView.layer?.backgroundColor = CGColor.black
             self.windowTitle = String(format: "Quick Camera: [%@]", device.localizedName)
             self.window.title = self.windowTitle
@@ -361,7 +360,7 @@ class QCAppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, QCUsbWat
     }
 }
 
-class MyPlayerView : AVPlayerView {
+class MyPlayerView : NSView {
 	override func keyDown(with event: NSEvent) {
 		if (event.keyCode == 49){
 			print("SPACE")
