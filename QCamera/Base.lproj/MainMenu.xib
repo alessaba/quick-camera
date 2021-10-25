@@ -109,6 +109,9 @@
                                     <action selector="saveImage:" target="494" id="2e0-wH-zXa"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Quick Save" alternate="YES" keyEquivalent=" " id="SlS-Z2-mBK">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                            </menuItem>
                             <menuItem title="Borderless Mode" keyEquivalent="b" id="651">
                                 <connections>
                                     <action selector="borderless:" target="494" id="XSj-SB-hEo"/>
@@ -163,11 +166,11 @@
             </items>
             <point key="canvasLocation" x="24" y="-383"/>
         </menu>
-        <window title="Quick Camera" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" tabbingMode="disallowed" id="371">
+        <window title="Quick Camera" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" tabbingMode="disallowed" id="371" customClass="MyPlayerWindow" customModule="Quick_Camera" customModuleProvider="target">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <rect key="contentRect" x="335" y="390" width="509" height="360"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1055"/>
-            <view key="contentView" wantsLayer="YES" id="372" customClass="MyPlayerView" customModule="Quick_Camera" customModuleProvider="target">
+            <view key="contentView" wantsLayer="YES" id="372">
                 <rect key="frame" x="0.0" y="0.0" width="509" height="360"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             </view>

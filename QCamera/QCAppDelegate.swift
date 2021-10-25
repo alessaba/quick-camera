@@ -360,13 +360,13 @@ class QCAppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, QCUsbWat
     }
 }
 
-class MyPlayerView : NSView {
+class MyPlayerWindow : NSWindow {
 	override func keyDown(with event: NSEvent) {
 		if (event.keyCode == 49){
 			print("SPACE")
 			let l = NSApplication.shared.delegate as! QCAppDelegate
 			l.saveImage(nil)
-			self.window!.makeFirstResponder(self)
+			self.makeFirstResponder(self)
 		}
 	}
 }
